@@ -6,6 +6,7 @@
 
       </div>
     </div>
+    <!-- NOTE v-if will only render this html if there is a movie in the AppState, otherwise this will throw errors -->
     <div v-if="movie" class="row pt-3">
       <div class="col-12">
         <div class="movie-card p-4 rounded">
@@ -62,6 +63,7 @@ export default {
     })
     return {
       movie: computed(() => AppState.movie),
+      // NOTE                                           vvv elvis operator says to only drill into AppState.movie if it has properties
       backdropImage: computed(() => `url(${AppState.movie?.backdropImg})`)
     }
   }
@@ -71,7 +73,8 @@ export default {
 
 <style lang="scss" scoped>
 .movie-bg {
-  background-image: v-bind(backdropImage) !important;
+  // NOTE how to bring data from our script in to our style tag
+  background-image: v-bind(backdropImage);
   height: 90vh;
   background-size: cover;
 }

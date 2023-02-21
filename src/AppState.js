@@ -16,5 +16,8 @@ export const AppState = reactive({
   currentPage: 0,
 
   /** @type {Number} */
-  totalPages: 0
+  totalPages: 0,
+
+  /** @type {String|null} */
+  query: null
 })

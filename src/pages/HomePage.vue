@@ -41,26 +41,26 @@ import Pop from '../utils/Pop.js';
 import { moviesService } from '../services/MoviesService.js'
 import { onMounted, computed, ref } from 'vue';
 import { AppState } from '../AppState.js';
+import MovieCard from '../components/MovieCard.vue';
 
 export default {
   setup() {
     // PRIVATE
-    const editable = ref({})
+    const editable = ref({});
     async function getMovies() {
       try {
-        await moviesService.getMovies()
-      } catch (error) {
-        Pop.error(error.message)
-        logger.error(error)
+        await moviesService.getMovies();
+      }
+      catch (error) {
+        Pop.error(error.message);
+        logger.error(error);
       }
     }
-
     // NOTE this runs when the home page is loaded, think of it like a constructor in your controllers
     onMounted(() => {
-      logger.log('Sup from the home page')
-      getMovies()
-    })
-
+      logger.log("Sup from the home page");
+      getMovies();
+    });
     return {
       // PUBLIC
       // NOTE Computed is how we talk to our appState, and have it update the page accordingly
@@ -70,24 +70,33 @@ export default {
       totalPages: computed(() => AppState.totalPages),
       async changePage(pageNumber) {
         try {
-          await moviesService.changePage(pageNumber)
-        } catch (error) {
-          logger.error(error)
-          Pop.error(error.message)
+          // NOTE check to see if there is a query being stored in the AppState, and call the correct method
+          if (AppState.query) {
+            await moviesService.changePageWithQuery(pageNumber);
+          }
+          else {
+            await moviesService.changePage(pageNumber);
+          }
+        }
+        catch (error) {
+          logger.error(error);
+          Pop.error(error.message);
         }
       },
       async searchMovies() {
         try {
-          let searchData = editable.value
-          await moviesService.searchMovies(searchData)
-          editable.value = {}
-        } catch (error) {
-          logger.error(error)
-          Pop.error(error.message)
+          let searchData = editable.value;
+          await moviesService.searchMovies(searchData);
+          editable.value = {};
+        }
+        catch (error) {
+          logger.error(error);
+          Pop.error(error.message);
         }
       }
-    }
-  }
+    };
+  },
+  components: { MovieCard }
 }
 </script>
 
